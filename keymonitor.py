@@ -3,6 +3,9 @@ from pygame.locals import *
 import os
 import glob
 import csv
+from collections import OrderedDict
+from threading import Thread
+
 
 #sound to headphone not hdmi
 #amixer cset numid=3 2
@@ -37,9 +40,12 @@ samples = [pygame.mixer.Sound(f) for f in files]
 
 #recording variables
 recording = False
-recordingStart = 0
+recordings = OrderedDict([(0,0)])
+recordingLast = 0
 RECORDING_FOLDER = "recordings"
 
+#playback
+PLAYSAMPLE = USEREVENT+1
 
 def main():
     pygame.init()
@@ -55,6 +61,8 @@ def main():
                 
             if (event.type == KEYDOWN):
                 keydownhandler(event.key)
+            if (event.type == PLAYSAMPLE):
+                samples[event.sample].play(loops=0)
 
 def keyuphandler(key):
     #turn led off
@@ -63,9 +71,24 @@ def keyuphandler(key):
 def playbackHandler():
     #load file
     #play it
+    #create a new thread
     print "playback"
+    for millis, soundindex in recordings.iteritems():
+        print millis
+        time.sleep(millis)
+        samples[soundindex].play(loops=0)
+
+        # creating the event
+        #my_event = pygame.event.Event(PLAYSAMPLE, sample=soundindex)
+        #pygame.event.post(my_event)
+
+        
+        
+
+    
 
 def recordButtonHandler():
+    global recording
     #handle start and stop recording
 
     if (recording):
@@ -77,10 +100,14 @@ def recordButtonHandler():
         
 def startRecording():
     #empty array
-    pass
+    global recordings, recordingLast
+    recordings.clear()
+    recordingLast = time.time()
 
 def stopRecording():
     #write out to file
+
+    print recordings
     pass
     
 
@@ -88,7 +115,13 @@ def stopRecording():
 
 def recordSound(soundindex):
     #record sound and timestamp to array or file
-    pass
+    global recordingLast
+    timenow = time.time() 
+    millis = timenow - recordingLast
+    recordingLast = timenow
+    print millis
+    print recordingLast
+    recordings[millis] = soundindex
     
 def keydownhandler(key):
     #handle key presses
@@ -99,9 +132,12 @@ def keydownhandler(key):
     soundindex = key-96
 
     if (key == RECORD):
-        recordButtonHandler(soundindex)
+        recordButtonHandler()
     elif (key == PLAY):
-        playbackHandler()
+        t = Thread(target=playbackhandler)
+        t.daemon = True
+        t.start()
+        #playbackHandler()
         
     #must be a sound key then!    
     else:        
