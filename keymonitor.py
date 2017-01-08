@@ -4,8 +4,8 @@ import os
 import glob
 import csv
 from collections import OrderedDict
-from threading import Thread
-
+#from threading import Thread
+import thread
 
 #sound to headphone not hdmi
 #amixer cset numid=3 2
@@ -45,7 +45,8 @@ recordingLast = 0
 RECORDING_FOLDER = "recordings"
 
 #playback
-PLAYSAMPLE = USEREVENT+1
+#PLAYSAMPLE = USEREVENT+1
+playing=False
 
 def main():
     pygame.init()
@@ -61,18 +62,26 @@ def main():
                 
             if (event.type == KEYDOWN):
                 keydownhandler(event.key)
-            if (event.type == PLAYSAMPLE):
-                samples[event.sample].play(loops=0)
+            #if (event.type == PLAYSAMPLE):
+            #    samples[event.sample].play(loops=0)
 
 def keyuphandler(key):
     #turn led off
     pass
 
-def playbackHandler():
+def playbackHandler(zero, thero):
     #load file
     #play it
     #create a new thread
     print "playback"
+    #global playing
+
+    #if (playing):
+    #    playing=False
+    #else:
+    #    playing=True
+
+    #wrap this in a loop in the new thread while(playing)
     for millis, soundindex in recordings.iteritems():
         print millis
         time.sleep(millis)
@@ -134,10 +143,11 @@ def keydownhandler(key):
     if (key == RECORD):
         recordButtonHandler()
     elif (key == PLAY):
-        t = Thread(target=playbackhandler)
-        t.daemon = True
-        t.start()
-        #playbackHandler()
+        #t = Thread(target=self.playbackhandler)
+        #t.daemon = True
+        #t.start()
+        #thread.start_new_thread(playbackHandler, (0,0))
+        playbackHandler(0,0)
         
     #must be a sound key then!    
     else:        
