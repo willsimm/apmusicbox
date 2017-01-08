@@ -2,6 +2,7 @@ import pygame, time
 from pygame.locals import *
 import os
 import glob
+import csv
 
 #sound to headphone not hdmi
 #amixer cset numid=3 2
@@ -59,22 +60,56 @@ def keyuphandler(key):
     #turn led off
     pass
 
-def playback():
+def playbackHandler():
+    #load file
+    #play it
     print "playback"
+
+def recordButtonHandler():
+    #handle start and stop recording
+
+    if (recording):
+        stopRecording()
+        recording=False
+    else:
+        startRecording()
+        recording=True
+        
+def startRecording():
+    #empty array
+    pass
+
+def stopRecording():
+    #write out to file
+    pass
+    
+
+    
+
+def recordSound(soundindex):
+    #record sound and timestamp to array or file
+    pass
     
 def keydownhandler(key):
+    #handle key presses
     global recording
     #turn led on
     print key
+    
+    soundindex = key-96
+
     if (key == RECORD):
-        recording = not recording
-        print recording
+        recordButtonHandler(soundindex)
     elif (key == PLAY):
-        playback()
+        playbackHandler()
+        
+    #must be a sound key then!    
     else:        
-        soundindex = key-96
         if (soundindex > 0 and soundindex < len(samples)) :
             samples[soundindex].play(loops=0)
+        if (recording):
+            recordSound(soundindex)
+
     
 
     
