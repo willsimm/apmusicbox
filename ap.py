@@ -11,31 +11,7 @@
 #map key to sound
 # map key to function
 
-#picade
-#1 306
-#2 308
-#3 32
-#4 304
-#5 122
-#6 120
 
-#left 276
-#right 275
-#down 274
-#up 273
-
-#1up 115
-#1/4 99
-#esc 27
-#ent 13
-
-#makey makey
-#W 119
-#A 97
-#S 115
-#D 100
-#F 102
-#G 103
 
 
 
@@ -63,6 +39,62 @@ PLAY = 258 # KEY 2
 
 #array leds:keys
 
+kb = True
+
+if(kb):
+    buttons = {113: "000_base.wav",
+        119: "001_cowbell.wav",
+        101 : "002_clash.wav",
+        114: "003_whistle.wav",
+        116: "004_rim.wav",
+        121: "005_hat.wav",
+        97: "39172__jobro__piano-ff-025.wav",
+        115: "39174__jobro__piano-ff-027.wav",
+        100 : "39176__jobro__piano-ff-029.wav",
+        102: "39178__jobro__piano-ff-031.wav",
+        103: "39180__jobro__piano-ff-033.wav",
+        104: "39182__jobro__piano-ff-035.wav"}
+else:
+    buttons = {306: "000_base.wav",
+        308: "001_cowbell.wav",
+        32 : "002_clash.wav",
+        304: "003_whistle.wav",
+        122: "004_rim.wav",
+        120: "005_hat.wav",
+        119: "39172__jobro__piano-ff-025.wav",
+        97: "39174__jobro__piano-ff-027.wav",
+        115 : "39176__jobro__piano-ff-029.wav",
+        100: "39178__jobro__piano-ff-031.wav",
+        102: "39180__jobro__piano-ff-033.wav",
+        103: "39182__jobro__piano-ff-035.wav"}
+
+
+#picade
+#1 306
+#2 308
+#3 32
+#4 304
+#5 122
+#6 120
+
+#left 276
+#right 275
+#down 274
+#up 273
+
+#1up 115
+#1/4 99
+#esc 27
+#ent 13
+
+#makey makey
+#W 119
+#A 97
+#S 115
+#D 100
+#F 102
+#G 103
+
 #sound samples
 SAMPLE_FOLDER = "samples"
 
@@ -73,8 +105,19 @@ BANK = os.path.join(os.path.dirname(__file__), SAMPLE_FOLDER)
 pygame.mixer.init(44100, -16, 1, 512)
 pygame.mixer.set_num_channels(16)
 
+
+files = list()
+for key, sound in buttons.items():
+    files.append( {key: glob.glob(os.path.join(BANK, sound))} )
+
+print files
+
+
 files = glob.glob(os.path.join(BANK, "*.wav"))
 files.sort()
+
+for f in files:
+    print f
 
 samples = [pygame.mixer.Sound(f) for f in files]
 
