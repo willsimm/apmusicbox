@@ -1,3 +1,44 @@
+#tasks
+#led to each GPIO 1-12
+#keymap
+#custom inputs - linked to one dreamer nano
+#save to file
+#load from file
+#webserver to edit file
+
+
+
+#map key to sound
+# map key to function
+
+#picade
+#1 306
+#2 308
+#3 32
+#4 304
+#5 122
+#6 120
+
+#left 276
+#right 275
+#down 274
+#up 273
+
+#1up 115
+#1/4 99
+#esc 27
+#ent 13
+
+#makey makey
+#W 119
+#A 97
+#S 115
+#D 100
+#F 102
+#G 103
+
+
+
 import pygame, time
 from pygame.locals import *
 import os
