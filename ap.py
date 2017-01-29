@@ -42,31 +42,31 @@ PLAY = 258 # KEY 2
 kb = True
 
 if(kb):
-    buttons = {113: "000_base.wav",
-        119: "001_cowbell.wav",
-        101 : "002_clash.wav",
-        114: "003_whistle.wav",
-        116: "004_rim.wav",
-        121: "005_hat.wav",
-        97: "39172__jobro__piano-ff-025.wav",
-        115: "39174__jobro__piano-ff-027.wav",
-        100 : "39176__jobro__piano-ff-029.wav",
-        102: "39178__jobro__piano-ff-031.wav",
-        103: "39180__jobro__piano-ff-033.wav",
-        104: "39182__jobro__piano-ff-035.wav"}
+    buttons = { 113: "000_base.wav",
+                119: "001_cowbell.wav",
+                101: "002_clash.wav",
+                114: "003_whistle.wav",
+                116: "004_rim.wav",
+                121: "005_hat.wav",
+                97 : "39172__jobro__piano-ff-025.wav",
+                115: "39174__jobro__piano-ff-027.wav",
+                100: "39176__jobro__piano-ff-029.wav",
+                102: "39178__jobro__piano-ff-031.wav",
+                103: "39180__jobro__piano-ff-033.wav",
+                104: "39182__jobro__piano-ff-035.wav"}
 else:
-    buttons = {306: "000_base.wav",
-        308: "001_cowbell.wav",
-        32 : "002_clash.wav",
-        304: "003_whistle.wav",
-        122: "004_rim.wav",
-        120: "005_hat.wav",
-        119: "39172__jobro__piano-ff-025.wav",
-        97: "39174__jobro__piano-ff-027.wav",
-        115 : "39176__jobro__piano-ff-029.wav",
-        100: "39178__jobro__piano-ff-031.wav",
-        102: "39180__jobro__piano-ff-033.wav",
-        103: "39182__jobro__piano-ff-035.wav"}
+    buttons = { 306: "000_base.wav",
+                308: "001_cowbell.wav",
+                32 : "002_clash.wav",
+                304: "003_whistle.wav",
+                122: "004_rim.wav",
+                120: "005_hat.wav",
+                119: "39172__jobro__piano-ff-025.wav",
+                97 : "39174__jobro__piano-ff-027.wav",
+                115: "39176__jobro__piano-ff-029.wav",
+                100: "39178__jobro__piano-ff-031.wav",
+                102: "39180__jobro__piano-ff-033.wav",
+                103: "39182__jobro__piano-ff-035.wav"}
 
 
 #picade
@@ -106,21 +106,30 @@ pygame.mixer.init(44100, -16, 1, 512)
 pygame.mixer.set_num_channels(16)
 
 
-files = list()
+samples = dict()
 for key, sound in buttons.items():
-    files.append( {key: glob.glob(os.path.join(BANK, sound))} )
+    t= os.path.join(BANK, sound)
+    s= pygame.mixer.Sound( t )
+    #files.append( {key: s} )
+    samples[key] = s
 
-print files
+
+#d= next((i for i, x in enumerate(files) if (x==119)))
+#print files[d]
+
+#print files[119]
+#print files
 
 
-files = glob.glob(os.path.join(BANK, "*.wav"))
-files.sort()
+#files = glob.glob(os.path.join(BANK, "*.wav"))
+#files.sort()
 
-for f in files:
-    print f
+#for f in files:
+#    print f
 
-samples = [pygame.mixer.Sound(f) for f in files]
+#samples = [pygame.mixer.Sound(f) for f in files]
 
+#print samples
 
 #recording variables
 recording = False
@@ -222,7 +231,7 @@ def keydownhandler(key):
     #turn led on
     print key
     
-    soundindex = key-96
+    soundindex = key
 
     if (key == RECORD):
         recordButtonHandler()
@@ -235,8 +244,12 @@ def keydownhandler(key):
         
     #must be a sound key then!    
     else:        
-        if (soundindex > 0 and soundindex < len(samples)) :
+        #if (soundindex > 0 and soundindex < len(samples)) :
+        #    samples[soundindex].plaqy(loops=0)
+        if samples.has_key(soundindex):
             samples[soundindex].play(loops=0)
+        else:
+            print "not set"
         if (recording):
             recordSound(soundindex)
 
