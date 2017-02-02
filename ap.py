@@ -1,6 +1,5 @@
 #tasks
-#led to each GPIO 1-12
-#keymap
+
 #custom inputs - linked to one dreamer nano
 #save to file
 #load from file
@@ -23,6 +22,10 @@ import csv
 from collections import OrderedDict
 #from threading import Thread
 import thread
+#from gpiozero import LED
+from time import sleep
+import RPi.GPIO as GPIO
+
 
 #sound to headphone not hdmi
 #amixer cset numid=3 1 (2 for hdmi, 0 for auto)
@@ -37,10 +40,7 @@ PLAY = 258 # KEY 2
 
 
 
-#array leds:keys
-
-kb = True
-
+kb = False
 if(kb):
     buttons = { 113: "000_base.wav",
                 119: "001_cowbell.wav",
@@ -67,6 +67,31 @@ else:
                 100: "39178__jobro__piano-ff-031.wav",
                 102: "39180__jobro__piano-ff-033.wav",
                 103: "39182__jobro__piano-ff-035.wav"}
+
+#map key numbers to GPIO pin for LED
+leds =        { 306: 20,
+                308: 16,
+                32 : 12,
+                304: 25,
+                122: 24,
+                120: 23,
+                119: 21,
+                97 : 5,
+                115: 6,
+                100: 13,
+                102: 19,
+                103: 26}
+
+
+GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
+
+for key, led in leds.items():
+    GPIO.setup(led, GPIO.OUT) # LED pin set as output
+    GPIO.output(led, GPIO.HIGH)
+    sleep(0.1)
+    GPIO.output(led, GPIO.LOW)
+
+
 
 
 #picade
@@ -160,6 +185,7 @@ def main():
 
 def keyuphandler(key):
     #turn led off
+    lightoff(key)
     pass
 
 def playbackHandler(zero, thero):
@@ -231,30 +257,31 @@ def keydownhandler(key):
     #turn led on
     print key
     
-    soundindex = key
+    #soundindex = key
 
     if (key == RECORD):
         recordButtonHandler()
     elif (key == PLAY):
-        #t = Thread(target=self.playbackhandler)
-        #t.daemon = True
-        #t.start()
-        #thread.start_new_thread(playbackHandler, (0,0))
         playbackHandler(0,0)
         
     #must be a sound key then!    
-    else:        
-        #if (soundindex > 0 and soundindex < len(samples)) :
-        #    samples[soundindex].plaqy(loops=0)
-        if samples.has_key(soundindex):
-            samples[soundindex].play(loops=0)
+    else:
+        
+        if samples.has_key(key):
+            samples[key].play(loops=0)
+            lighton(key)
         else:
             print "not set"
         if (recording):
-            recordSound(soundindex)
+            recordSound(key)
+    
+def lighton(key):
+    GPIO.output(leds[key], GPIO.HIGH)
+
+def lightoff(led):
+    GPIO.output(leds[key], GPIO.LOW)
 
     
-
     
 
 
