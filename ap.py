@@ -4,14 +4,12 @@
 #save to file
 #load from file
 #webserver to edit file
-
-
-
-#map key to sound
 # map key to function
 
 
-
+#sound to headphone not hdmi
+#amixer cset numid=3 1 (2 for hdmi, 0 for auto)
+#sounds from https://www.freesound.org/people/jobro/packs/2489/
 
 
 import pygame, time
@@ -27,9 +25,7 @@ from time import sleep
 import RPi.GPIO as GPIO
 
 
-#sound to headphone not hdmi
-#amixer cset numid=3 1 (2 for hdmi, 0 for auto)
-#sounds from https://www.freesound.org/people/jobro/packs/2489/
+
 
 #array sounds:keys
 sounds = { 256 : 265}
@@ -70,11 +66,11 @@ else:
 
 #map key numbers to GPIO pin for LED
 leds =        { 306: 20,
-                308: 16,
+                308: 24,
                 32 : 12,
-                304: 25,
-                122: 24,
-                120: 23,
+                304: 23,
+                122: 16,
+                120: 25,
                 119: 21,
                 97 : 5,
                 115: 6,
@@ -276,9 +272,11 @@ def keydownhandler(key):
             recordSound(key)
     
 def lighton(key):
+    print "gpio"
+    print leds[key]
     GPIO.output(leds[key], GPIO.HIGH)
 
-def lightoff(led):
+def lightoff(key):
     GPIO.output(leds[key], GPIO.LOW)
 
     
