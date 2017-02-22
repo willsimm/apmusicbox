@@ -31,9 +31,9 @@ import RPi.GPIO as GPIO
 sounds = { 256 : 265}
 
 #function buttons
-RECORD = 257 # KEY 1
-PLAY = 258 # KEY 2
-
+RECORD = 273 # 
+PLAY = 276 # 
+PLAY_NO_LIGHT = 275
 
 
 kb = False
@@ -66,11 +66,11 @@ else:
 
 #map key numbers to GPIO pin for LED
 leds =        { 306: 20,
-                308: 24,
+                308: 16,#24,
                 32 : 12,
-                304: 23,
-                122: 16,
-                120: 25,
+                304: 25,
+                122: 24,#16,
+                120: 23,
                 119: 21,
                 97 : 5,
                 115: 6,
@@ -82,6 +82,7 @@ leds =        { 306: 20,
 GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
 
 for key, led in leds.items():
+    print led
     GPIO.setup(led, GPIO.OUT) # LED pin set as output
     GPIO.output(led, GPIO.HIGH)
     sleep(0.1)
@@ -184,7 +185,7 @@ def keyuphandler(key):
     lightoff(key)
     pass
 
-def playbackHandler(zero, thero):
+def playbackHandler(zero, thero, sound):
     #load file
     #play it
     #create a new thread
@@ -195,12 +196,29 @@ def playbackHandler(zero, thero):
     #    playing=False
     #else:
     #    playing=True
-
+    previoussoundindex = 0
     #wrap this in a loop in the new thread while(playing)
     for millis, soundindex in recordings.iteritems():
         print millis
         time.sleep(millis)
-        samples[soundindex].play(loops=0)
+
+        #turn previous light off and current light on 
+        lightoff(previoussoundindex)
+        lighton(soundindex)
+        previoussoundindex=soundindex
+        #print "index:"
+        #print recordings[recordings.keys()[-1]]
+        #print "end"
+
+        #IF ITS THE LAST ONE MAKE SURE WE TURN THE LIGHT OFF
+        if (soundindex == recordings[recordings.keys()[-1]]):
+            print "last irem"
+            time.sleep(0.4)
+            lightoff(soundindex)
+        
+        if (sound):
+            samples[soundindex].play(loops=0)
+
 
         # creating the event
         #my_event = pygame.event.Event(PLAYSAMPLE, sample=soundindex)
@@ -224,13 +242,14 @@ def recordButtonHandler():
         
 def startRecording():
     #empty array
+    print "recording start"
     global recordings, recordingLast
     recordings.clear()
     recordingLast = time.time()
 
 def stopRecording():
     #write out to file
-
+    print "recording stop"
     print recordings
     pass
     
@@ -258,7 +277,9 @@ def keydownhandler(key):
     if (key == RECORD):
         recordButtonHandler()
     elif (key == PLAY):
-        playbackHandler(0,0)
+        playbackHandler(0,0,True)
+    elif (key == PLAY_NO_LIGHT):
+        playbackHandler(0,0,False)
         
     #must be a sound key then!    
     else:
@@ -273,14 +294,13 @@ def keydownhandler(key):
     
 def lighton(key):
     print "gpio"
-    print leds[key]
-    GPIO.output(leds[key], GPIO.HIGH)
+    if leds.has_key(key):
+        print leds[key]
+        GPIO.output(leds[key], GPIO.HIGH)
 
 def lightoff(key):
-    GPIO.output(leds[key], GPIO.LOW)
-
+    if leds.has_key(key):
+        GPIO.output(leds[key], GPIO.LOW)
     
     
-
-
 main()
