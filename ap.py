@@ -51,26 +51,45 @@ if(kb):
                 103: "39180__jobro__piano-ff-033.wav",
                 104: "39182__jobro__piano-ff-035.wav"}
 else:
-    buttons = { 306: "000_base.wav",
+    buttons = { #arcade buttons connected to picade
+                306: "000_base.wav",
                 308: "001_cowbell.wav",
                 32 : "002_clash.wav",
                 304: "003_whistle.wav",
                 122: "004_rim.wav",
                 120: "005_hat.wav",
+                #makey makey touch keys
                 119: "39172__jobro__piano-ff-025.wav",
                 97 : "39174__jobro__piano-ff-027.wav",
                 115: "39176__jobro__piano-ff-029.wav",
                 100: "39178__jobro__piano-ff-031.wav",
                 102: "39180__jobro__piano-ff-033.wav",
-                103: "39182__jobro__piano-ff-035.wav"}
+                103: "39182__jobro__piano-ff-035.wav",
+                
+                #Flex Sensor connected to dreamer nano 
+                112: "39172__jobro__piano-ff-025.wav",     #P
+                111: "39174__jobro__piano-ff-027.wav",     #O
+                105: "39176__jobro__piano-ff-029.wav",     #I
+                117: "39178__jobro__piano-ff-031.wav",    # U
+                121: "39180__jobro__piano-ff-033.wav",     #Y
+                116: "39182__jobro__piano-ff-035.wav",     #T
+
+                #force sensor on dreamer nano
+                108: "39172__jobro__piano-ff-025.wav",     #     L
+                107: "39176__jobro__piano-ff-029.wav",     #     K
+                106: "39180__jobro__piano-ff-033.wav",     #     J
+                104 : "39182__jobro__piano-ff-035.wav"     #    H
+                }
 
 #map key numbers to GPIO pin for LED
-leds =        { 306: 20,
+leds =        { #arcade buttons on picade
+                306: 20,
                 308: 16,#24,
                 32 : 12,
                 304: 25,
                 122: 24,#16,
                 120: 23,
+                #makey makey
                 119: 21,
                 97 : 5,
                 115: 6,
@@ -206,18 +225,15 @@ def playbackHandler(zero, thero, sound):
         lightoff(previoussoundindex)
         lighton(soundindex)
         previoussoundindex=soundindex
-        #print "index:"
-        #print recordings[recordings.keys()[-1]]
-        #print "end"
-
-        #IF ITS THE LAST ONE MAKE SURE WE TURN THE LIGHT OFF
-        if (soundindex == recordings[recordings.keys()[-1]]):
-            print "last irem"
-            time.sleep(0.4)
-            lightoff(soundindex)
         
         if (sound):
             samples[soundindex].play(loops=0)
+
+        #IF ITS THE LAST ONE MAKE SURE WE TURN THE LIGHT OFF
+        if (soundindex == recordings[recordings.keys()[-1]]):
+            #print "last irem"
+            time.sleep(0.4)
+            lightoff(soundindex)
 
 
         # creating the event
