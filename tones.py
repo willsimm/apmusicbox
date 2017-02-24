@@ -1,3 +1,5 @@
+## make longer tones and remove looping
+
 import serial
 
 import pygame, time
