@@ -151,8 +151,7 @@ baud = 9600
 sensors = serial.Serial(sensor_port, baud, timeout = 0)
 
 
-RECORDINGS_FOLDER = "www/recordings"
-RECORDINGS = os.path.join(os.path.dirname(__file__), RECORDINGS_FOLDER)
+
 
 #sound samples
 SAMPLE_FOLDER = "samples"
@@ -188,7 +187,8 @@ tone=100
 recording = False
 recordings = OrderedDict([(0,0)])
 recordingLast = 0
-RECORDING_FOLDER = "recordings"
+RECORDINGS_FOLDER = "www/recordings"
+RECORDINGS = os.path.join(os.path.dirname(__file__), RECORDINGS_FOLDER)
 
 #playback
 playing=False
@@ -251,12 +251,18 @@ def playbackHandler(zero, thero, sound):
     #play it
     #create a new thread
     print "playback"
-    #global playing
 
-    #if (playing):
-    #    playing=False
-    #else:
-    #    playing=True
+    if (len(recordings) > 1):
+        print "playback from memory"
+
+    else:
+        print "playback from file"
+        recordings.clear()
+        latestRecording = sorted(os.listdir(RECORDINGS))[-1]
+        t= os.path.join(RECORDINGS, latestRecording)
+        for key, val in csv.reader(open(t)):
+            recordings[float(key)] = int(val)
+            
     previoussoundindex = 0
     #wrap this in a loop in the new thread while(playing)
     for millis, soundindex in recordings.iteritems():
@@ -277,10 +283,6 @@ def playbackHandler(zero, thero, sound):
             time.sleep(0.4)
             lightoff(soundindex)
 
-
-        # creating the event
-        #my_event = pygame.event.Event(PLAYSAMPLE, sample=soundindex)
-        #pygame.event.post(my_event)
 
         
         
@@ -314,7 +316,7 @@ def stopRecording():
     print filename
     t= os.path.join(RECORDINGS, filename)
     w = csv.writer(open(t, "w"))
-    w.writerow(["milliseconds", "keyindex"])
+    #w.writerow(["milliseconds", "keyindex"])
     for key, val in recordings.items():
         w.writerow([key, val])
     pass
