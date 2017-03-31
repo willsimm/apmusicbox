@@ -2,7 +2,9 @@
 
 // configuration
 $url = 'index.php';
-$file = '/home/pi/ap/config.txt';
+$filename = time() . '.webedit.csv';
+$file = '/home/pi/ap/www/recordings/' . $filename;
+//print $file;
 
 // check if form has been submitted
 if (isset($_POST['text']))
@@ -16,10 +18,24 @@ if (isset($_POST['text']))
     exit();
 }
 
-// read the textfile
-$text = file_get_contents($file);
+// read the latest recording
+
+$files = glob('recordings/*.csv') ;
+//print_r( $files);
+asort ($files);
+
+//print_r($files);
+
+//print array_pop($files); 
+
+$text = file_get_contents(array_pop($files));
+
 
 ?>
+<a href="/recordings/">Previous recordings to download</a>
+<br />
+
+Edit the latest recording (saves to new file):
 <!-- HTML form -->
 <form action="" method="post"  >
 <textarea name="text" rows=40 cols=100><?php echo htmlspecialchars($text) ?></textarea>
