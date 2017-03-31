@@ -151,8 +151,8 @@ baud = 9600
 sensors = serial.Serial(sensor_port, baud, timeout = 0)
 
 
-
-
+RECORDINGS_FOLDER = "www/recordings"
+RECORDINGS = os.path.join(os.path.dirname(__file__), RECORDINGS_FOLDER)
 
 #sound samples
 SAMPLE_FOLDER = "samples"
@@ -309,6 +309,14 @@ def stopRecording():
     #write out to file
     print "recording stop"
     print recordings
+    timenow = time.time()
+    filename = str(timenow) + ".csv"
+    print filename
+    t= os.path.join(RECORDINGS, filename)
+    w = csv.writer(open(t, "w"))
+    w.writerow(["milliseconds", "keyindex"])
+    for key, val in recordings.items():
+        w.writerow([key, val])
     pass
     
 
