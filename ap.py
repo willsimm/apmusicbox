@@ -200,8 +200,8 @@ def main():
     screen = pygame.display.set_mode((640, 480))
     pygame.display.set_caption('Pygame Keyboard Test')
     
-
-    while True:
+    done =False
+    while not done:
         #process pygame event queue
         for event in pygame.event.get():
             if (event.type == KEYUP):
@@ -211,6 +211,9 @@ def main():
                 keydownhandler(event.key)
             #if (event.type == PLAYSAMPLE):
             #    samples[event.sample].play(loops=0)
+            elif event.type == pygame.QUIT:
+                done = True
+                break
 
         #read force and flex sensors on serial port
         input = sensors.readline()

@@ -26,3 +26,6 @@ https://www.raspberrypi.org/documentation/remote-access/web-server/apache.md
 www folder (change to /home/pi/ap/www):
 http://stackoverflow.com/a/23175981
 
+Crontab -e
+@reboot sudo python /home/pi/ap/ap.py &
+
