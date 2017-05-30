@@ -26,7 +26,7 @@ from time import sleep
 import RPi.GPIO as GPIO
 #set dummy video driver for headless running
 os.environ["SDL_VIDEODRIVER"] = "dummy"
-screen = display.set_mode((1,1))
+#screen = display.set_mode((1,1))
 
 
 #function buttons
