@@ -27,3 +27,5 @@ TODO:
 - map force sensor to tones
 - add mic recording input to create user samples, map to new buttons?
 - other inputs
+- Make web interface display look nicer
+- Web interface config and mapping of buttons / lights and upload / selection of sound samples.
